@@ -33,6 +33,7 @@ export const pushQueue = createAsyncThunk(
 );
 
 export const fetchSyncStatus = makeThunk("sync/status", syncApi.getSyncStatus, "Failed to load sync status");
+export const triggerCloudSyncThunk = makeThunk("sync/cloud", syncApi.triggerCloudSync, "Cloud sync failed");
 export const retrySyncOp = makeThunk("sync/retry", syncApi.retryOperation, "Retry failed");
 export const dismissSyncOp = makeThunk("sync/dismiss", ({ operationId, note }) => syncApi.dismissOperation(operationId, note), "Failed to dismiss operation");
 
@@ -40,7 +41,9 @@ const syncSlice = createSlice({
   name: "sync",
   initialState: {
     queue: [], loaded: false, syncing: false, lastResults: [],
-    counts: { pending: 0, done: 0, failed: 0, conflict: 0, dismissed: 0 }, attention: [], loading: false, error: null,
+    counts: { pending: 0, done: 0, failed: 0, conflict: 0, dismissed: 0 }, attention: [],
+    cloud: { dbMode: "local", cloudConfigured: true, cloudConnected: false, syncing: false, lastSyncedAt: null, pendingOutboxCount: 0 },
+    loading: false, error: null,
   },
   reducers: {},
   extraReducers: (b) => {
@@ -50,8 +53,19 @@ const syncSlice = createSlice({
       .addCase(pushQueue.fulfilled, (s, a) => { s.syncing = false; s.queue = a.payload.remaining; s.lastResults = a.payload.results; })
       .addCase(pushQueue.rejected, (s, a) => { s.syncing = false; if (a.payload) s.error = a.payload; })
       .addCase(fetchSyncStatus.pending, (s) => { s.loading = true; })
-      .addCase(fetchSyncStatus.fulfilled, (s, a) => { s.loading = false; s.counts = a.payload.counts; s.attention = a.payload.attention; })
-      .addCase(fetchSyncStatus.rejected, (s, a) => { s.loading = false; s.error = a.payload; });
+      .addCase(fetchSyncStatus.fulfilled, (s, a) => {
+        s.loading = false;
+        s.counts = a.payload.counts;
+        s.attention = a.payload.attention;
+        if (a.payload.cloud) s.cloud = a.payload.cloud;
+      })
+      .addCase(fetchSyncStatus.rejected, (s, a) => { s.loading = false; s.error = a.payload; })
+      .addCase(triggerCloudSyncThunk.pending, (s) => { s.syncing = true; })
+      .addCase(triggerCloudSyncThunk.fulfilled, (s, a) => {
+        s.syncing = false;
+        if (a.payload?.cloud) s.cloud = a.payload.cloud;
+      })
+      .addCase(triggerCloudSyncThunk.rejected, (s) => { s.syncing = false; });
   },
 });
 

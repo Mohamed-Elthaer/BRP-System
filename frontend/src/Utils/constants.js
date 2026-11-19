@@ -27,6 +27,7 @@ export const PERM = {
   EMPLOYEES_MANAGE: "employees.manage",
   LOGS_VIEW: "logs.view",
   SETTINGS_MANAGE: "settings.manage",
+  AI_USE: "ai.use",
 };
 
 export const ORDER_TYPES = [
@@ -35,9 +36,9 @@ export const ORDER_TYPES = [
   { key: "delivery", label: "Delivery" },
 ];
 
-// الأخضر = تمام، الزعفراني = شغال دلوقتي، الطوبي = مشكلة
+// توحيد الهوية البصرية: الأخضر الأساسي والأخضر الهادئ، والطوبي للتنبيه/الإلغاء
 export const STATUS_META = {
-  new: { label: "New", bar: "bg-saffron", pill: "bg-saffron-soft text-saffron" },
+  new: { label: "New", bar: "bg-leaf", pill: "bg-primary-soft text-brand" },
   preparing: { label: "Preparing", bar: "bg-leaf", pill: "bg-primary-soft text-brand" },
   ready: { label: "Ready", bar: "bg-primary", pill: "bg-primary text-white" },
   served: { label: "Served", bar: "bg-primary", pill: "bg-primary-soft text-brand" },
@@ -46,7 +47,7 @@ export const STATUS_META = {
 };
 
 export const PAYMENT_META = {
-  unpaid: { label: "Unpaid", pill: "bg-saffron-soft text-saffron" },
+  unpaid: { label: "Unpaid", pill: "bg-primary-soft text-brand" },
   paid: { label: "Paid", pill: "bg-primary-soft text-brand" },
   refunded: { label: "Refunded", pill: "bg-brick-soft text-brick" },
 };

@@ -27,6 +27,7 @@ import Employees from "./Pages/Employees.jsx";
 import ActivityLogs from "./Pages/ActivityLogs.jsx";
 import Sync from "./Pages/Sync.jsx";
 import Settings from "./Pages/Settings.jsx";
+import AIAssistant from "./Pages/AIAssistant.jsx";
 import Profile from "./Pages/Profile.jsx";
 import NotFound from "./Pages/NotFound.jsx";
 import { loadQueue } from "./Redux/Slices/syncSlice.js";
@@ -85,6 +86,7 @@ export default function App() {
           <Route path="employees" element={guard([PERM.EMPLOYEES_MANAGE], <Employees />)} />
           <Route path="activity" element={guard([PERM.LOGS_VIEW], <ActivityLogs />)} />
           <Route path="sync" element={guard([PERM.POS_USE], <Sync />)} />
+          <Route path="ai-assistant" element={guard([PERM.AI_USE], <AIAssistant />)} />
           <Route path="settings" element={guard([PERM.SETTINGS_MANAGE], <Settings />)} />
           <Route path="profile" element={<Profile />} />
         </Route>

@@ -90,7 +90,7 @@ import Topbar from "./Topbar.jsx";
 import useSocket from "../../Hooks/useSocket.js";
 import useOnlineStatus from "../../Hooks/useOnlineStatus.js";
 import { fetchSettings } from "../../Redux/Slices/settingsSlice.js";
-import { loadQueue, pushQueue } from "../../Redux/Slices/syncSlice.js";
+import { fetchSyncStatus, loadQueue, pushQueue } from "../../Redux/Slices/syncSlice.js";
 
 export default function MainLayout() {
   const dispatch = useDispatch();
@@ -103,6 +103,9 @@ export default function MainLayout() {
   useEffect(() => {
     dispatch(fetchSettings());
     dispatch(loadQueue());
+    dispatch(fetchSyncStatus());
+    const statusTimer = setInterval(() => dispatch(fetchSyncStatus()), 30000);
+    return () => clearInterval(statusTimer);
   }, [dispatch]);
 
   // لما الإنترنت يرجع (أو التطبيق يفتح) والطابور فيه عمليات: بتتبعت تلقائي

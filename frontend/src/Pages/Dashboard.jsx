@@ -36,9 +36,19 @@ export default function Dashboard() {
         title="Dashboard"
         subtitle="Compared with the previous period of the same length"
         actions={
-          <div className="flex rounded-xl border border-line bg-surface p-1">
+          <div className="flex rounded-xl border border-line bg-surface p-1 shadow-xs">
             {PRESETS.map((p) => (
-              <button key={p.key} onClick={() => setPreset(p.key)} className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition ${preset === p.key ? "bg-saffron text-[#2A2622]" : "text-muted hover:text-ink"}`}>{p.label}</button>
+              <button
+                key={p.key}
+                onClick={() => setPreset(p.key)}
+                className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all ${
+                  preset === p.key
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-muted hover:text-ink hover:bg-primary-soft/50"
+                }`}
+              >
+                {p.label}
+              </button>
             ))}
           </div>
         }
@@ -51,10 +61,10 @@ export default function Dashboard() {
         <div className={loading ? "opacity-60 transition-opacity" : "transition-opacity"}>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <StatCard index={0} icon={Banknote} label="Revenue" value={fmt(c.revenue)} delta={ch.revenue} />
-            <StatCard index={1} icon={ShoppingBag} label="Orders" value={num(c.totalOrders, 0)} delta={ch.totalOrders} accent="saffron" />
+            <StatCard index={1} icon={ShoppingBag} label="Orders" value={num(c.totalOrders, 0)} delta={ch.totalOrders} accent="primary" />
             <StatCard index={2} icon={Receipt} label="Average order" value={fmt(c.avgOrderValue)} delta={ch.avgOrderValue} />
             <StatCard index={3} icon={TrendingUp} label="Gross profit" value={fmt(c.grossProfit)} delta={ch.grossProfit} />
-            <StatCard index={4} icon={Wallet} label="Expenses" value={fmt(c.expenses)} delta={ch.expenses} accent="saffron" />
+            <StatCard index={4} icon={Wallet} label="Expenses" value={fmt(c.expenses)} delta={ch.expenses} accent="primary" />
             <StatCard index={5} icon={TrendingUp} label="Net profit" value={fmt(c.netProfit)} delta={ch.netProfit} accent={c.netProfit < 0 ? "brick" : "primary"} />
           </div>
 
@@ -94,7 +104,7 @@ export default function Dashboard() {
                     <XAxis dataKey="date" tick={{ fontSize: 11, fill: "var(--c-muted)" }} tickFormatter={(d) => d.slice(5)} />
                     <YAxis tick={{ fontSize: 11, fill: "var(--c-muted)" }} width={48} />
                     <Tooltip contentStyle={tip} formatter={(v) => fmt(v)} />
-                    <Bar dataKey="total" fill="#D49A2A" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="total" fill="#7FB394" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               ) : <EmptyState title="No expenses in this period" />}

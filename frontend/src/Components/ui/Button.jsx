@@ -1,13 +1,18 @@
 import { motion } from "framer-motion";
 
 const variants = {
-  primary: "bg-primary text-white hover:bg-primary-dark",
-  saffron: "bg-saffron text-[#2A2622] hover:brightness-95",
-  outline: "border border-line bg-surface text-ink hover:bg-primary-soft",
-  ghost: "text-ink hover:bg-primary-soft",
-  danger: "bg-brick text-white hover:brightness-95",
+  primary: "bg-primary text-white hover:bg-primary-dark active:bg-primary-dark shadow-sm hover:shadow transition-all",
+  saffron: "bg-primary text-white hover:bg-primary-dark active:bg-primary-dark shadow-sm hover:shadow transition-all",
+  outline: "border border-line bg-surface text-ink hover:bg-primary-soft hover:text-primary hover:border-primary/40 shadow-xs transition-all",
+  ghost: "text-muted hover:text-primary hover:bg-primary-soft transition-colors",
+  danger: "bg-brick text-white hover:brightness-95 shadow-sm transition-all",
+  soft: "bg-primary-soft text-primary hover:bg-primary/20 shadow-xs transition-all",
 };
-const sizes = { sm: "h-8 px-3 text-xs gap-1.5", md: "h-10 px-4 text-sm gap-2", lg: "h-12 px-6 text-base gap-2" };
+const sizes = {
+  sm: "h-8 px-3 text-xs gap-1.5",
+  md: "h-10 px-4 text-sm gap-2",
+  lg: "h-12 px-6 text-base gap-2 font-bold",
+};
 
 export default function Button({ variant = "primary", size = "md", loading = false, icon: Icon, className = "", children, disabled, ...props }) {
   return (

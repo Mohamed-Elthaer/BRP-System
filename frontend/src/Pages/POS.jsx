@@ -83,7 +83,17 @@ export default function POS() {
     <div className="flex h-full flex-col">
       <div className="mb-3 grid gap-1 rounded-xl bg-bg p-1" style={{ gridTemplateColumns: `repeat(${types.length}, 1fr)` }}>
         {types.map((t) => (
-          <button key={t.key} onClick={() => dispatch(setOrderType(t.key))} className={`rounded-lg cursor-pointer px-2 py-2 text-xs font-bold transition ${pos.orderType === t.key ? "bg-saffron text-[#2A2622] shadow" : "text-muted hover:text-ink"}`}>{t.label}</button>
+          <button
+            key={t.key}
+            onClick={() => dispatch(setOrderType(t.key))}
+            className={`rounded-lg cursor-pointer px-2 py-2 text-xs font-bold transition-all ${
+              pos.orderType === t.key
+                ? "bg-primary text-white shadow-sm"
+                : "text-muted hover:text-ink hover:bg-primary-soft/50"
+            }`}
+          >
+            {t.label}
+          </button>
         ))}
       </div>
 
@@ -128,7 +138,7 @@ export default function POS() {
         </div>
         <div className="grid grid-cols-2 gap-2">
           <Button className="cursor-pointer" variant="outline" size="lg" disabled={!pos.items.length} loading={pos.submitting && !payOpen} onClick={() => send()}>Send to kitchen</Button>
-          <Button className=" cursor-pointer " variant="saffron" size="lg" disabled={!pos.items.length} onClick={() => setPayOpen(true)}>Pay & complete</Button>
+          <Button className="cursor-pointer" variant="primary" size="lg" disabled={!pos.items.length} onClick={() => setPayOpen(true)}>Pay & complete</Button>
         </div>
         <p className="text-center text-[11px] text-muted">Final total is calculated by the server.</p>
       </div>
@@ -152,7 +162,17 @@ export default function POS() {
           </div>
           <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
             {[{ _id: "all", name: "All" }, ...categories.filter((c) => c.isActive)].map((c) => (
-              <button key={c._id} onClick={() => setCat(c._id)} className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition ${cat === c._id ? "bg-saffron text-[#2A2622]" : "border border-line bg-surface hover:bg-primary-soft"}`}>{c.name}</button>
+              <button
+                key={c._id}
+                onClick={() => setCat(c._id)}
+                className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+                  cat === c._id
+                    ? "bg-primary text-white shadow-sm"
+                    : "border border-line bg-surface text-ink hover:bg-primary-soft hover:border-primary/40"
+                }`}
+              >
+                {c.name}
+              </button>
             ))}
           </div>
 

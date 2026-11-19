@@ -70,7 +70,10 @@ const parseCookies = (header = "") =>
 
 export const initSocket = (httpServer) => {
   io = new Server(httpServer, {
-    cors: { origin: process.env.CLIENT_URL, credentials: true },
+    cors: {
+      origin: (_requestOrigin, callback) => callback(null, true),
+      credentials: true,
+    },
   });
 
   

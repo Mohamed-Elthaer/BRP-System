@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import asyncWrapper from "../middleware/asyncWrapper.js";
 
 import User from "../models/ModelUser.js";
@@ -7,6 +7,7 @@ import AppError from "../utils/AppError.js";
 import httpStatusText from "../utils/httpStatusText.js";
 import generatJwt from "../utils/generatJwt.js";
 import cloudinary from "../config/cloudinary.js";
+import { destroyImage } from "../utils/cloudinaryHelpers.js";
 import userRole, {
   ROLE_VALUES,
   getPermissions,
@@ -14,10 +15,13 @@ import userRole, {
 } from "../utils/userRoles.js";
 import { TokenBlacklist } from "../models/modelBlackList.js";
 
+const isHttpsProd =
+  process.env.NODE_ENV === "production" && !process.env.ELECTRON_APP;
+
 const cookieOption = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  secure: isHttpsProd,
+  sameSite: isHttpsProd ? "none" : "lax",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
@@ -28,10 +32,7 @@ const fail = (message, code) =>
   AppError.create(message, code, httpStatusText.ERROR);
 
 const removeAvatar = async (avatar) => {
-  if (!avatar?.public_id) return;
-  try {
-    await cloudinary.uploader.destroy(avatar.public_id);
-  } catch (_) {}
+  await destroyImage(avatar);
 };
 
 const reject = async (req, next, message, code) => {
