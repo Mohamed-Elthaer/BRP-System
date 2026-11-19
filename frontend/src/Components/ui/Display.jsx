@@ -4,7 +4,7 @@ import { TrendingDown, TrendingUp } from "lucide-react";
 const tones = {
   neutral: "bg-line/60 text-muted",
   success: "bg-primary-soft text-brand",
-  warn: "bg-saffron-soft text-saffron",
+  warn: "bg-primary-soft text-brand",
   danger: "bg-brick-soft text-brick",
 };
 
@@ -68,7 +68,11 @@ export function Delta({ value }) {
 }
 
 export function StatCard({ icon: Icon, label, value, delta, accent = "primary", index = 0 }) {
-  const accents = { primary: "bg-primary-soft text-brand", saffron: "bg-saffron-soft text-saffron", brick: "bg-brick-soft text-brick" };
+  const accents = {
+    primary: "bg-primary-soft text-brand",
+    saffron: "bg-primary-soft text-brand",
+    brick: "bg-brick-soft text-brick",
+  };
   return (
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.06 }}>
       <Card className="h-full">

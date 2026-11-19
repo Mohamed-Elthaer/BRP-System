@@ -74,7 +74,7 @@ export default function Settings() {
             <div className="grid gap-5 sm:grid-cols-2">
               <div className="space-y-3"><Switch checked={d.tax.enabled} onChange={upd("tax.enabled")} label="Charge tax" /><Input label="Tax rate (%)" type="number" min={0} max={100} step="any" value={d.tax.rate} onChange={upd("tax.rate")} /></div>
               <div className="space-y-3"><Switch checked={d.serviceCharge.enabled} onChange={upd("serviceCharge.enabled")} label="Service charge" /><Input label="Service rate (%)" type="number" min={0} max={100} step="any" value={d.serviceCharge.rate} onChange={upd("serviceCharge.rate")} />
-                <div><p className="mb-1.5 text-xs font-semibold text-muted">Applies to</p><div className="flex flex-wrap gap-2">{d.orderTypes.map((t) => <button key={t.key} onClick={() => toggleIn("serviceCharge.appliesTo", d.serviceCharge.appliesTo, t.key)} className={`rounded-full px-3 py-1 text-xs font-semibold ${d.serviceCharge.appliesTo.includes(t.key) ? "bg-saffron text-[#2A2622]" : "border border-line"}`}>{t.label || t.key}</button>)}</div></div>
+                <div><p className="mb-1.5 text-xs font-semibold text-muted">Applies to</p><div className="flex flex-wrap gap-2">{d.orderTypes.map((t) => <button key={t.key} onClick={() => toggleIn("serviceCharge.appliesTo", d.serviceCharge.appliesTo, t.key)} className={`rounded-full px-3 py-1 text-xs font-semibold transition-all ${d.serviceCharge.appliesTo.includes(t.key) ? "bg-primary text-white shadow-xs" : "border border-line hover:bg-primary-soft/50"}`}>{t.label || t.key}</button>)}</div></div>
               </div>
             </div>
             <SaveBtn keys={["tax", "serviceCharge"]} />

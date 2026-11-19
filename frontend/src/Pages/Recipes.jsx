@@ -77,7 +77,7 @@ export default function Recipes() {
           <div className="max-h-[70dvh] space-y-1 overflow-y-auto">
             {loading && !list.length && <div className="grid place-items-center py-8"><Spinner /></div>}
             {filtered.map((m) => (
-              <button key={m._id} onClick={() => pick(m)} className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left transition ${selected?._id === m._id ? "bg-saffron-soft" : "hover:bg-primary-soft"}`}>
+              <button key={m._id} onClick={() => pick(m)} className={`flex w-full items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-left transition ${selected?._id === m._id ? "bg-primary-soft text-primary font-bold shadow-xs" : "hover:bg-primary-soft/60"}`}>
                 <span className="min-w-0"><span className="block truncate text-sm font-semibold">{m.name}</span><span className="text-xs text-muted">{fmt(m.price)}</span></span>
                 {m.hasRecipe ? <Badge tone={m.margin >= 50 ? "success" : m.margin >= 25 ? "warn" : "danger"}>{m.margin}%</Badge> : <Badge>No recipe</Badge>}
               </button>

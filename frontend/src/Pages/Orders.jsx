@@ -30,7 +30,7 @@ export default function Orders() {
 
   const columns = [
     { key: "orderNumber", label: "Order", render: (o) => <span className="font-bold">#{o.orderNumber}</span> },
-    { key: "orderType", label: "Type", render: (o) => <span>{ORDER_TYPES.find((t) => t.key === o.orderType)?.label}{o.tableNumber ? ` · T${o.tableNumber}` : ""}{o.origin === "offline_sync" && <span className="ml-1 text-[10px] font-bold text-saffron">OFFLINE</span>}</span> },
+    { key: "orderType", label: "Type", render: (o) => <span>{ORDER_TYPES.find((t) => t.key === o.orderType)?.label}{o.tableNumber ? ` · T${o.tableNumber}` : ""}{o.origin === "offline_sync" && <span className="ml-1 rounded bg-primary-soft px-1.5 py-0.5 text-[10px] font-bold text-primary">OFFLINE</span>}</span> },
     { key: "items", label: "Items", render: (o) => o.items.reduce((s, i) => s + i.quantity, 0) },
     { key: "total", label: "Total", render: (o) => <span className="font-semibold">{fmt(o.total)}</span> },
     { key: "paymentStatus", label: "Payment", render: (o) => <Pill className={PAYMENT_META[o.paymentStatus].pill}>{PAYMENT_META[o.paymentStatus].label}</Pill> },
@@ -44,7 +44,15 @@ export default function Orders() {
       <PageHeader title="Orders" subtitle="Live list. It refreshes when anything changes" />
       <div className="mb-4 flex gap-2 overflow-x-auto pb-1">
         {STATUS_CHIPS.map((s) => (
-          <button key={s || "all"} onClick={() => { setF((p) => ({ ...p, status: s })); setPage(1); }} className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition ${f.status === s ? "bg-saffron text-[#2A2622]" : "border border-line bg-surface hover:bg-primary-soft"}`}>
+          <button
+            key={s || "all"}
+            onClick={() => { setF((p) => ({ ...p, status: s })); setPage(1); }}
+            className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+              f.status === s
+                ? "bg-primary text-white shadow-sm"
+                : "border border-line bg-surface text-ink hover:bg-primary-soft hover:border-primary/40"
+            }`}
+          >
             {s ? STATUS_META[s].label : "All"}
           </button>
         ))}

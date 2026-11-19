@@ -28,7 +28,7 @@ const COLUMNS = [
     action: {
       to: "preparing",
       label: "Start preparing",
-      variant: "saffron",
+      variant: "primary",
     },
   },
   {
@@ -89,7 +89,7 @@ function Ticket({ order, action, canAct, onMove, busy }) {
             </p>
 
             {(order.isLocal || order.pendingStatusSync) && (
-              <span className="mt-2 inline-block rounded-full bg-saffron-soft px-2 py-1 text-xs font-bold text-saffron">
+              <span className="mt-2 inline-block rounded-full bg-primary-soft px-2 py-1 text-xs font-bold text-primary shadow-xs">
                 Pending Sync
               </span>
             )}
@@ -119,7 +119,7 @@ function Ticket({ order, action, canAct, onMove, busy }) {
               </span>
 
               {item.notes && (
-                <p className="ml-8 text-xs font-medium text-saffron">
+                <p className="ml-8 text-xs font-medium text-brand">
                   “{item.notes}”
                 </p>
               )}
@@ -128,7 +128,7 @@ function Ticket({ order, action, canAct, onMove, busy }) {
         </ul>
 
         {order.notes && (
-          <p className="mt-3 rounded-lg bg-saffron-soft px-2.5 py-1.5 text-xs font-medium text-saffron">
+          <p className="mt-3 rounded-lg bg-primary-soft px-2.5 py-1.5 text-xs font-medium text-primary">
             Note: {order.notes}
           </p>
         )}
@@ -271,7 +271,7 @@ export default function Kitchen() {
         title="Kitchen"
         subtitle="New orders appear here the moment they're sent"
         actions={
-          <span className="flex items-center gap-1.5 rounded-full bg-saffron-soft px-3 py-1.5 text-xs font-bold text-saffron">
+          <span className="flex items-center gap-1.5 rounded-full bg-primary-soft px-3 py-1.5 text-xs font-bold text-primary shadow-xs">
             <Flame className="size-3.5" />
             {orders.length} active
           </span>

@@ -5,7 +5,7 @@
 @theme {
   --font-sans: "Plus Jakarta Sans", "Cairo", system-ui, sans-serif;
   --color-herb: #2F6B4F;      /* أخضر أعشاب: الأساسي */
-  --color-saffron: #D49A2A;   /* زعفراني: شغال دلوقتي */
+  --color-saffron: #2F6B4F;   /* موحد مع الأخضر الأساسي */
   --color-brick: #B5412F;     /* أحمر طوبي: تحذير فقط */
   --color-leaf: #7FB394;      /* أخضر فاتح: تحضير */
   --color-sidebar: #1E3027;
@@ -33,18 +33,18 @@
 :root {
   --c-bg: #F6F2EA; --c-surface: #FFFDF8; --c-ink: #2A2622; --c-muted: #7A736A; --c-line: #E6DFD1;
   --c-primary: #2F6B4F; --c-primary-dark: #255740; --c-primary-soft: #E3EFE8; --c-brand: #2F6B4F;
-  --c-saffron-soft: #FBF0D6; --c-brick-soft: #F7E3DF;
+  --c-saffron-soft: #E3EFE8; --c-brick-soft: #F7E3DF;
 }
 .dark {
   --c-bg: #0F1713; --c-surface: #16211B; --c-ink: #ECE7DB; --c-muted: #9AA79F; --c-line: #25352C;
   --c-primary: #3A8260; --c-primary-dark: #2F6B4F; --c-primary-soft: #1E3A2D; --c-brand: #86C9A3;
-  --c-saffron-soft: #3A2E14; --c-brick-soft: #3B1F1A;
+  --c-saffron-soft: #1E3A2D; --c-brick-soft: #3B1F1A;
 }
 
 html, body, #root { height: 100%; }
 body { @apply bg-bg text-ink font-sans antialiased; }
 * { scrollbar-width: thin; scrollbar-color: var(--c-line) transparent; }
-:focus-visible { outline: 2px solid var(--color-saffron); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; }
 
 /* طباعة الفاتورة فقط */
 @media print {

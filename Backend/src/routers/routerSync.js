@@ -9,6 +9,7 @@ router.use(verifyToken);
 
 
 router.post("/push", requirePermission(P.POS_USE), controller.push);
+router.post("/cloud", requirePermission(P.POS_USE), controller.triggerCloudSync);
 router.get("/status", requirePermission(P.POS_USE), controller.getStatus);
 router.get("/operations", requirePermission(P.POS_USE), controller.getOperations);
 router.post("/operations/:operationId/retry", requirePermission(P.POS_USE), controller.retry);

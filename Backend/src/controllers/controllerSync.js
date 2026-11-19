@@ -4,6 +4,7 @@ import SyncOperation, { SYNC_STATUSES } from "../models/modelSyncOperation.js";
 import Order from "../models/modelOrder.js";
 import User from "../models/ModelUser.js";
 import { placeOrder, payExistingOrder } from "../services/orderService.js";
+import { getCloudSyncStatus, runCloudSyncCycle } from "../services/cloudSyncEngine.js";
 import userRole from "../utils/userRoles.js";
 import { fail } from "../utils/fail.js";
 import { send } from "../utils/respond.js";
@@ -189,7 +190,12 @@ const getStatus = asyncWrapper(async (req, res) => {
   ]);
   const counts = Object.fromEntries(SYNC_STATUSES.map((s) => [s, 0]));
   grouped.forEach((g) => (counts[g._id] = g.count));
-  send(res, { counts, attention });
+  send(res, { counts, attention, cloud: getCloudSyncStatus() });
+});
+
+const triggerCloudSync = asyncWrapper(async (_req, res) => {
+  const cloud = await runCloudSyncCycle();
+  send(res, { cloud });
 });
 
 const getOperations = asyncWrapper(async (req, res) => {
@@ -258,4 +264,4 @@ const dismiss = asyncWrapper(async (req, res, next) => {
   send(res, op);
 });
 
-export default { push, getStatus, getOperations, retry, dismiss };
+export default { push, getStatus, getOperations, retry, dismiss, triggerCloudSync };

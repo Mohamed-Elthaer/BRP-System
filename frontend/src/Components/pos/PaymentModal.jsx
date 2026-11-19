@@ -30,7 +30,7 @@ export default function PaymentModal({ open, onClose, total, onConfirm, loading 
       title="Pay & complete"
       size="sm"
       footer={
-        <Button variant="saffron" size="lg" className="w-full" loading={loading} disabled={cashInvalid} onClick={() => onConfirm({ method, amountTendered: method === "cash" && tendered !== "" ? Number(tendered) : undefined })}>
+        <Button variant="primary" size="lg" className="w-full shadow-sm" loading={loading} disabled={cashInvalid} onClick={() => onConfirm({ method, amountTendered: method === "cash" && tendered !== "" ? Number(tendered) : undefined })}>
           Confirm {fmt(total)}
         </Button>
       }
@@ -41,7 +41,15 @@ export default function PaymentModal({ open, onClose, total, onConfirm, loading 
           const Icon = ICONS[m.key] || CreditCard;
           const active = method === m.key;
           return (
-            <button key={m.key} onClick={() => setMethod(m.key)} className={`flex flex-col items-center gap-1 rounded-xl border p-3 text-sm font-semibold transition ${active ? "border-saffron bg-saffron-soft" : "border-line hover:bg-primary-soft"}`}>
+            <button
+              key={m.key}
+              onClick={() => setMethod(m.key)}
+              className={`flex flex-col items-center gap-1 rounded-xl border p-3 text-sm font-semibold transition-all ${
+                active
+                  ? "border-primary bg-primary-soft text-primary font-bold shadow-xs"
+                  : "border-line text-muted hover:text-ink hover:bg-primary-soft/50 hover:border-primary/40"
+              }`}
+            >
               <Icon className="size-5" />{m.label || m.key}
             </button>
           );

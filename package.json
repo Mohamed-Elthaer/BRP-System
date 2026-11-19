@@ -1,0 +1,21 @@
+{
+  "name": "brp-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BRP System — Restaurant ERP (Offline & Online Desktop + Cloud)",
+  "scripts": {
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm run dev --prefix Backend\" \"npm run dev --prefix frontend\"",
+    "dev:electron": "concurrently -n server,client,electron -c cyan,magenta,yellow \"npm run dev --prefix Backend\" \"npm run dev --prefix frontend\" \"npx --prefix frontend electron ./frontend\"",
+    "dev:server": "npm run dev --prefix Backend",
+    "dev:client": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "dist": "npm run dist --prefix frontend",
+    "start": "npm start --prefix Backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

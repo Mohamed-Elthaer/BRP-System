@@ -2,6 +2,7 @@ import api from "./Axios";
 import { unwrap, params } from "./helpers";
 
 export const pushOperations = async (operations) => unwrap(await api.post("/sync/push", { operations }));
+export const triggerCloudSync = async () => unwrap(await api.post("/sync/cloud"));
 export const getSyncStatus = async () => unwrap(await api.get("/sync/status"));
 export const getSyncOperations = async (p) => unwrap(await api.get("/sync/operations", { params: params(p) }));
 export const retryOperation = async (operationId) => unwrap(await api.post(`/sync/operations/${operationId}/retry`));

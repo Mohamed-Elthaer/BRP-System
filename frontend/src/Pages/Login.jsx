@@ -52,26 +52,26 @@ export default function Login() {
   return (
     <div className="grid min-h-dvh lg:grid-cols-[1.05fr_1fr]">
       {/* لوحة الهوية */}
-      <section className="relative hidden overflow-hidden bg-sidebar p-12 text-white lg:flex lg:flex-col lg:justify-between">
-        <div className="absolute -left-24 -top-24 size-96 animate-float rounded-full bg-saffron/25 blur-3xl" />
-        <div className="absolute -bottom-32 right-0 size-[28rem] animate-float rounded-full bg-primary/40 blur-3xl [animation-delay:-4s]" />
+      <section className="relative hidden overflow-hidden border-r border-line bg-surface p-12 text-ink lg:flex lg:flex-col lg:justify-between">
+        <div className="absolute -left-24 -top-24 size-96 animate-float rounded-full bg-primary-soft blur-3xl" />
+        <div className="absolute -bottom-32 right-0 size-[28rem] animate-float rounded-full bg-primary-soft/80 blur-3xl [animation-delay:-4s]" />
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="relative flex items-center gap-3">
-          <span className="grid size-11 place-items-center rounded-2xl bg-saffron text-[#2A2622]"><ChefHat className="size-6" /></span>
-          <span className="text-lg font-extrabold">Restaurant ERP</span>
+          <img src="./logo.png" alt="Mat3amy" className="h-14 w-auto object-contain drop-shadow" />
+          <span className="text-xl font-extrabold tracking-tight text-ink">Mat3amy</span>
         </motion.div>
         <motion.div variants={container} initial="hidden" animate="show" className="relative max-w-md">
-          <motion.h1 variants={item} className="text-4xl font-extrabold leading-tight xl:text-5xl">
-            Your whole restaurant, <span className="text-saffron">one calm screen.</span>
+          <motion.h1 variants={item} className="text-4xl font-extrabold leading-tight text-ink xl:text-5xl">
+            Your whole restaurant, <span className="text-primary">one calm screen.</span>
           </motion.h1>
           <ul className="mt-8 space-y-3">
             {FEATURES.map((f) => (
-              <motion.li key={f} variants={item} className="flex items-center gap-3 text-white/80">
-                <span className="grid size-6 place-items-center rounded-full bg-primary/60"><Check className="size-3.5" /></span>{f}
+              <motion.li key={f} variants={item} className="flex items-center gap-3 font-medium text-ink/80">
+                <span className="grid size-6 place-items-center rounded-full bg-primary-soft text-primary"><Check className="size-3.5" /></span>{f}
               </motion.li>
             ))}
           </ul>
         </motion.div>
-        <p className="relative text-sm text-white/40">Green means done, saffron means happening now, brick means attention.</p>
+        <p className="relative text-sm text-muted">Complete restaurant management operating system.</p>
       </section>
 
       {/* الفورم */}
@@ -79,8 +79,8 @@ export default function Login() {
         <ThemeToggle className="absolute right-4 top-4" />
         <motion.div variants={container} initial="hidden" animate="show" className="w-full max-w-lg">
           <motion.div variants={item} className="mb-6 flex items-center gap-3 lg:hidden">
-            <span className="grid size-10 place-items-center rounded-xl bg-saffron text-[#2A2622]"><ChefHat className="size-5" /></span>
-            <span className="font-extrabold">Restaurant ERP</span>
+            <img src="./logo.png" alt="Mat3amy" className="h-12 w-auto object-contain" />
+            <span className="text-lg font-extrabold">Mat3amy</span>
           </motion.div>
           <motion.h2 variants={item} className="text-2xl font-extrabold sm:text-3xl">Welcome back</motion.h2>
           <motion.p variants={item} className="mt-1 text-sm text-muted">Choose how you work today, then sign in.</motion.p>
@@ -97,10 +97,21 @@ export default function Login() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => { setRole(key); setMismatch(""); }}
                   aria-pressed={active}
-                  className={`relative rounded-2xl border p-3 text-left transition-colors ${active ? "border-saffron bg-saffron-soft" : "border-line bg-surface hover:border-primary/50"}`}
+                  className={`relative rounded-2xl border p-3 text-left transition-all ${
+                    active
+                      ? "border-primary bg-primary-soft shadow-xs"
+                      : "border-line bg-surface hover:border-primary/50"
+                  }`}
                 >
-                  {active && <motion.span layoutId="role-check" className="absolute right-2 top-2 grid size-5 place-items-center rounded-full bg-saffron text-[#2A2622]"><Check className="size-3" /></motion.span>}
-                  <Icon className={`size-6 ${active ? "text-saffron" : "text-brand"}`} />
+                  {active && (
+                    <motion.span
+                      layoutId="role-check"
+                      className="absolute right-2 top-2 grid size-5 place-items-center rounded-full bg-primary text-white shadow-xs"
+                    >
+                      <Check className="size-3" />
+                    </motion.span>
+                  )}
+                  <Icon className={`size-6 ${active ? "text-primary" : "text-brand"}`} />
                   <p className="mt-2 text-sm font-bold">{label}</p>
                   <p className="mt-0.5 text-[11px] leading-snug text-muted">{desc}</p>
                 </motion.button>

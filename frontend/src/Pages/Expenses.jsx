@@ -32,7 +32,7 @@ import {
 
 const COLORS = [
   "#2F6B4F",
-  "#D49A2A",
+  "#3A8260",
   "#7FB394",
   "#B5412F",
   "#8C7B5B",
@@ -243,7 +243,7 @@ export default function Expenses() {
           icon={Wallet}
           label="Total in period"
           value={fmt(summary?.total || 0)}
-          accent="saffron"
+          accent="primary"
         />
         <Card className="flex flex-wrap items-center gap-4">
           {summary?.byCategory?.length ? (

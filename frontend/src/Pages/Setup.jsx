@@ -30,7 +30,7 @@ export default function Setup() {
   return (
     <div className="grid min-h-dvh place-items-center bg-bg px-4 py-10">
       <motion.form onSubmit={submit} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md rounded-3xl border border-line bg-surface p-6 shadow-xl sm:p-8">
-        <span className="grid size-12 place-items-center rounded-2xl bg-saffron text-[#2A2622]"><Crown className="size-6" /></span>
+        <span className="grid size-12 place-items-center rounded-2xl bg-primary text-white shadow-sm"><Crown className="size-6" /></span>
         <h1 className="mt-4 text-2xl font-extrabold">Set up your restaurant</h1>
         <p className="mt-1 text-sm text-muted">Create the owner account. This works only once. Other staff are added from Employees.</p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">

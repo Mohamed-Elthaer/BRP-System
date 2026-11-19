@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   LayoutDashboard, ShoppingCart, ClipboardList, Flame, UtensilsCrossed, Tags, BookOpen, Boxes, Package,
-  Truck, Wallet, Receipt, CreditCard, Users, ScrollText, Settings, RefreshCw, LogOut, ChefHat, X,
+  Truck, Wallet, Receipt, CreditCard, Users, ScrollText, Settings, RefreshCw, LogOut, ChefHat, X, Sparkles,
 } from "lucide-react";
 import usePermission from "../../Hooks/usePermission.js";
 import { PERM, ROLE_META } from "../../Utils/constants.js";
@@ -37,6 +37,7 @@ const NAV = [
     { to: "/employees", label: "Employees", icon: Users, perm: [PERM.EMPLOYEES_MANAGE] },
     { to: "/activity", label: "Activity log", icon: ScrollText, perm: [PERM.LOGS_VIEW] },
     { to: "/sync", label: "Sync", icon: RefreshCw, perm: [PERM.POS_USE] },
+    { to: "/ai-assistant", label: "AI Assistant", icon: Sparkles, perm: [PERM.AI_USE] },
     { to: "/settings", label: "Settings", icon: Settings, perm: [PERM.SETTINGS_MANAGE] },
   ] },
 ];
@@ -47,34 +48,36 @@ function Content({ onNavigate }) {
   const restaurant = useSelector((s) => s.settings.data?.restaurant);
 
   return (
-    <div className="flex h-full flex-col bg-sidebar text-white">
-      <div className="flex items-center gap-3 px-5 py-5">
+    <div className="flex h-full flex-col border-r border-line bg-surface text-ink">
+      <div className="flex items-center gap-3 border-b border-line/70 px-5 py-5">
         {restaurant?.logo?.url ? (
           <img src={restaurant.logo.url} alt="" className="size-10 rounded-xl object-cover" />
         ) : (
-          <span className="grid size-10 place-items-center rounded-xl bg-saffron text-[#2A2622]"><ChefHat className="size-6" /></span>
+          <img src="./logo.png" alt="Mat3amy" className="h-11 w-auto max-w-[52px] object-contain" />
         )}
         <div className="min-w-0">
-          <p className="truncate text-sm font-extrabold">{restaurant?.name || "Restaurant ERP"}</p>
-          <p className="text-xs text-white/60">{ROLE_META[user?.role]?.label}</p>
+          <p className="truncate text-sm font-extrabold text-ink">{restaurant?.name && restaurant.name !== "My Restaurant" ? restaurant.name : "Mat3amy"}</p>
+          <p className="text-xs font-medium text-muted">{ROLE_META[user?.role]?.label}</p>
         </div>
       </div>
 
-      <nav className="flex-1 space-y-5 overflow-y-auto px-3 pb-4">
+      <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
         {NAV.map((group) => {
           const items = group.items.filter((i) => can(...i.perm));
           if (!items.length) return null;
           return (
             <div key={group.title}>
-              <p className="mb-1.5 px-3 text-[11px] font-bold uppercase tracking-wider text-white/40">{group.title}</p>
+              <p className="mb-1.5 px-3 text-[11px] font-bold uppercase tracking-wider text-muted/80">{group.title}</p>
               {items.map(({ to, label, icon: Icon }) => (
                 <NavLink
                   key={to}
                   to={to}
                   onClick={onNavigate}
                   className={({ isActive }) =>
-                    `mb-0.5 flex items-center gap-3 rounded-xl border-l-4 px-3 py-2.5 text-sm font-medium transition-colors ${
-                      isActive ? "border-saffron bg-white/10 text-white" : "border-transparent text-white/70 hover:bg-white/5 hover:text-white"
+                    `mb-0.5 flex items-center gap-3 rounded-xl border-l-4 px-3 py-2.5 text-sm font-semibold transition-colors ${
+                      isActive
+                        ? "border-primary bg-primary-soft text-primary"
+                        : "border-transparent text-muted hover:bg-primary-soft/60 hover:text-primary"
                     }`
                   }
                 >
@@ -87,19 +90,19 @@ function Content({ onNavigate }) {
         })}
       </nav>
 
-      <div className="border-t border-white/10 p-3">
-        <NavLink to="/profile" onClick={onNavigate} className="flex items-center gap-3 rounded-xl p-2 hover:bg-white/5">
+      <div className="border-t border-line p-3">
+        <NavLink to="/profile" onClick={onNavigate} className="flex items-center gap-3 rounded-xl p-2 transition-colors hover:bg-primary-soft/60">
           {user?.avatar?.url ? (
             <img src={user.avatar.url} alt="" className="size-9 rounded-full object-cover" />
           ) : (
-            <span className="grid size-9 place-items-center rounded-full bg-primary text-xs font-bold">{initials(user)}</span>
+            <span className="grid size-9 place-items-center rounded-full bg-primary-soft text-xs font-bold text-primary">{initials(user)}</span>
           )}
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-semibold">{fullName(user)}</span>
-            <span className="block truncate text-xs text-white/50">{user?.email}</span>
+            <span className="block truncate text-sm font-semibold text-ink">{fullName(user)}</span>
+            <span className="block truncate text-xs text-muted">{user?.email}</span>
           </span>
         </NavLink>
-        <button onClick={() => dispatch(logoutUser())} className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 hover:bg-white/5 hover:text-white">
+        <button onClick={() => dispatch(logoutUser())} className="mt-1 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-muted transition-colors hover:bg-brick-soft/60 hover:text-brick">
           <LogOut className="size-[18px]" /> Sign out
         </button>
       </div>
@@ -120,7 +123,7 @@ export default function Sidebar() {
           <motion.div className="fixed inset-0 z-40 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="absolute inset-0 bg-black/50" onClick={close} />
             <motion.aside className="relative h-full w-72 max-w-[85vw]" initial={{ x: -300 }} animate={{ x: 0 }} exit={{ x: -300 }} transition={{ type: "spring", damping: 30, stiffness: 320 }}>
-              <button onClick={close} aria-label="Close menu" className="absolute right-3 top-4 z-10 rounded-lg p-1.5 text-white/70 hover:bg-white/10"><X className="size-5" /></button>
+              <button onClick={close} aria-label="Close menu" className="absolute right-3 top-4 z-10 rounded-lg p-1.5 text-muted hover:bg-primary-soft hover:text-primary"><X className="size-5" /></button>
               <Content onNavigate={close} />
             </motion.aside>
           </motion.div>

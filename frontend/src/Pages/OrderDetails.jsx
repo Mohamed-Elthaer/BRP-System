@@ -60,7 +60,7 @@ export default function OrderDetails() {
         </div>
         <div className="flex flex-wrap gap-2">
           {canAdvance && <Button loading={busy} onClick={() => run(() => dispatch(changeOrderStatus({ id, status: next.to })).unwrap(), `Order ${next.to}`)}>{next.label}</Button>}
-          {canPay && <Button variant="saffron" onClick={() => setDialog("pay")}>Take payment</Button>}
+          {canPay && <Button variant="primary" onClick={() => setDialog("pay")}>Take payment</Button>}
           {inv && <Button variant="outline" icon={FileText} onClick={() => setInvoice(inv)}>Invoice</Button>}
           {canRefund && <Button variant="outline" icon={Undo2} onClick={() => setDialog("refund")}>Refund</Button>}
           {canCancel && <Button variant="danger" icon={Ban} onClick={() => setDialog("cancel")}>Cancel order</Button>}
@@ -74,7 +74,7 @@ export default function OrderDetails() {
             <div className="divide-y divide-line">
               {order.items.map((i) => (
                 <div key={i._id} className="flex items-start justify-between gap-3 py-2.5 text-sm">
-                  <div><p className="font-semibold">{i.quantity} × {i.name}</p>{i.notes && <p className="text-xs text-saffron">“{i.notes}”</p>}</div>
+                  <div><p className="font-semibold">{i.quantity} × {i.name}</p>{i.notes && <p className="text-xs text-brand font-medium">“{i.notes}”</p>}</div>
                   <span className="font-semibold">{fmt(i.price * i.quantity)}</span>
                 </div>
               ))}
@@ -110,7 +110,7 @@ export default function OrderDetails() {
             {order.notes && <p><span className="text-muted">Notes:</span> {order.notes}</p>}
             <p><span className="text-muted">Cashier:</span> {fullName(order.createdBy) || "—"}</p>
             <p><span className="text-muted">Created:</span> {dt(order.createdAt)}</p>
-            {order.origin === "offline_sync" && <p className="font-semibold text-saffron">Created offline and synced</p>}
+            {order.origin === "offline_sync" && <p className="font-semibold text-brand">Created offline and synced</p>}
             {order.cancelReason && <p className="text-brick">Cancelled: {order.cancelReason}</p>}
           </Card>
           <Card>

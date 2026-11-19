@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { CheckCircle2, RefreshCw } from "lucide-react";
-import { dismissSyncOp, fetchSyncStatus, pushQueue, retrySyncOp } from "../Redux/Slices/syncSlice.js";
+import { CheckCircle2, Cloud, CloudOff, Database, RefreshCw } from "lucide-react";
+import { dismissSyncOp, fetchSyncStatus, pushQueue, retrySyncOp, triggerCloudSyncThunk } from "../Redux/Slices/syncSlice.js";
 import { PERM } from "../Utils/constants.js";
 import { dt } from "../Utils/format.js";
 import usePermission from "../Hooks/usePermission.js";
@@ -12,13 +12,13 @@ import { ConfirmDialog } from "../Components/ui/Modal.jsx";
 import { Textarea } from "../Components/ui/Fields.jsx";
 import { Badge, Card, EmptyState, PageHeader, StatCard } from "../Components/ui/Display.jsx";
 
-const ACCENT = { pending: "saffron", done: "primary", failed: "brick", conflict: "brick", dismissed: "primary" };
+const ACCENT = { pending: "primary", done: "primary", failed: "brick", conflict: "brick", dismissed: "primary" };
 
 export default function Sync() {
   const dispatch = useDispatch();
   const { can } = usePermission();
   const online = useOnlineStatus();
-  const { queue, syncing, counts, attention } = useSelector((s) => s.sync);
+  const { queue, syncing, counts, attention, cloud } = useSelector((s) => s.sync);
   const [dismissing, setDismissing] = useState(null);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(null);
@@ -28,8 +28,16 @@ export default function Sync() {
 
   const syncNow = async () => {
     try {
-      const { results } = await dispatch(pushQueue()).unwrap();
-      toast.info(results.length ? `${results.filter((r) => r.status === "done").length} of ${results.length} synced` : "Nothing to sync");
+      if (queue.length) {
+        await dispatch(pushQueue()).unwrap();
+      }
+      const res = await dispatch(triggerCloudSyncThunk()).unwrap();
+      const c = res?.cloud;
+      if (c?.cloudConnected) {
+        toast.success(`Cloud Sync complete (Pushed: ${c.lastPushCount || 0}, Pulled: ${c.lastPullCount || 0})`);
+      } else {
+        toast.info("Saved to local database. Cloud sync will resume when internet returns.");
+      }
       refresh();
     } catch (err) { toast.error(err || "Sync failed"); }
   };
@@ -47,13 +55,37 @@ export default function Sync() {
 
   return (
     <>
-      <PageHeader title="Sync" subtitle="Orders created offline are saved here until the server confirms them"
-        actions={<Button icon={RefreshCw} loading={syncing} disabled={!online || !queue.length} onClick={syncNow}>Sync now</Button>} />
-      {!online && <p className="mb-4 rounded-xl bg-brick-soft px-4 py-3 text-sm font-semibold text-brick">You&apos;re offline. Pending operations will send automatically when the connection returns.</p>}
+      <PageHeader title="Sync & Offline Engine" subtitle="All data is saved instantaneously to the local database and automatically synchronized with Cloud Atlas"
+        actions={<Button icon={RefreshCw} loading={syncing || cloud?.syncing} onClick={syncNow}>Sync with Cloud Now</Button>} />
+      {!online && <p className="mb-4 rounded-xl bg-brick-soft px-4 py-3 text-sm font-semibold text-brick">You&apos;re operating in Offline Mode. All POS, Kitchen, Inventory &amp; Reports work locally and will sync to the cloud automatically when internet returns.</p>}
+
+      <Card className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="grid size-11 place-items-center rounded-xl bg-primary-soft text-primary shadow-xs">
+            {cloud?.cloudConnected ? <Cloud className="size-5" /> : <CloudOff className="size-5" />}
+          </div>
+          <div>
+            <p className="font-bold flex items-center gap-2">
+              Database Mode: <span className="uppercase">{cloud?.dbMode || "local"}</span>
+              <Badge tone={cloud?.cloudConnected ? "success" : "neutral"}>
+                {cloud?.cloudConnected ? "Cloud Connected" : "Local Offline-First"}
+              </Badge>
+            </p>
+            <p className="text-xs text-muted">
+              {cloud?.lastSyncedAt ? `Last cloud sync: ${dt(cloud.lastSyncedAt)}` : "Waiting for initial cloud sync cycle"}
+              {cloud?.pendingOutboxCount > 0 ? ` · ${cloud.pendingOutboxCount} local change(s) queued for cloud push` : " · All local records synced"}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-muted">
+          <Database className="size-4" />
+          <span>Embedded MongoDB + Atlas Bidirectional Sync</span>
+        </div>
+      </Card>
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard index={0} label="Waiting on this device" value={queue.length} accent="saffron" />
-        <StatCard index={1} label="Synced" value={counts.done} />
+        <StatCard index={0} label="Pending Cloud Push" value={(cloud?.pendingOutboxCount || 0) + queue.length} accent="primary" />
+        <StatCard index={1} label="Synced Operations" value={counts.done} />
         <StatCard index={2} label="Need attention" value={counts.failed + counts.conflict} accent={counts.failed + counts.conflict ? "brick" : "primary"} />
         <StatCard index={3} label="Dismissed" value={counts.dismissed} accent={ACCENT.dismissed} />
       </div>
