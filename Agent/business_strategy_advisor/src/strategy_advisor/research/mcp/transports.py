@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import time
 import urllib.request
+import urllib.error
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional
 
@@ -74,55 +75,85 @@ class HttpTransport(Transport):
 class McpJsonRpcTransport(Transport):
     """Real MCP client over streamable HTTP (JSON-RPC 2.0).
 
-    Implements initialize, notifications/initialized, tools/list, tools/call.
+    Supports protocol versions 2024-11-05, 2025-03-26, 2025-06-18.
+    Stateless: no session id. Sends MCP-Protocol-Version header.
+    Version negotiation falls back to older versions on unsupported-version errors.
     """
 
-    PROTOCOL_VERSION = "2024-11-05"
+    SUPPORTED_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"]
 
-    def __init__(self, endpoint: str, api_key: Optional[str] = None, auth_method: str = "none", timeout: int = 20) -> None:
+    def __init__(self, endpoint: str, api_key: Optional[str] = None, auth_method: str = "none",
+                 timeout: int = 20, protocol_version: str = "2025-03-26") -> None:
         self.endpoint = endpoint
         self.api_key = api_key
         self.auth_method = auth_method
         self.timeout = timeout
+        self.protocol_version = protocol_version if protocol_version in self.SUPPORTED_VERSIONS else "2025-03-26"
         self._req_id = 0
         self._initialized = False
+        self.negotiated_version: Optional[str] = None
 
     def _next_id(self) -> int:
         self._req_id += 1
         return self._req_id
 
+    def _headers(self) -> dict:
+        h = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream",
+             "MCP-Protocol-Version": self.protocol_version}
+        if self.api_key and self.auth_method == "bearer":
+            h["Authorization"] = f"Bearer {self.api_key}"
+        return h
+
     def _post(self, payload: dict) -> dict:
         data = json.dumps(payload).encode("utf-8")
-        req = urllib.request.Request(self.endpoint, data=data, headers={"Content-Type": "application/json",
-                                                                      "Accept": "application/json, text/event-stream"}, method="POST")
-        if self.api_key and self.auth_method == "bearer":
-            req.add_header("Authorization", f"Bearer {self.api_key}")
-        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-            raw = resp.read(500000)
+        req = urllib.request.Request(self.endpoint, data=data, headers=self._headers(), method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                raw = resp.read(500000)
+        except urllib.error.HTTPError as exc:
+            raw = exc.read() if hasattr(exc, "read") else b""
+            text = raw.decode("utf-8", errors="replace")
+            try:
+                return json.loads(text)
+            except Exception:
+                raise ResearchError(f"mcp http error {exc.code}: {text[:200]}")
         text = raw.decode("utf-8", errors="replace")
-        # handle SSE-framed responses
-        if text.startswith("event:") or "\nevent:" in text:
-            # extract last data: line
+        if "event:" in text and "data:" in text:
             data_lines = [ln[5:].strip() for ln in text.splitlines() if ln.startswith("data:")]
             text = data_lines[-1] if data_lines else "{}"
-        return json.loads(text)
+        try:
+            return json.loads(text)
+        except json.JSONDecodeError as exc:
+            raise ResearchError(f"invalid json response: {text[:200]}")
 
     def _initialize(self) -> None:
         if self._initialized:
             return
-        payload = {"jsonrpc": "2.0", "id": self._next_id(), "method": "initialize",
-                   "params": {"protocolVersion": self.PROTOCOL_VERSION,
-                              "capabilities": {},
-                              "clientInfo": {"name": "brp-strategic-intelligence", "version": "0.1.0"}}}
-        resp = self._post(payload)
-        if "error" in resp:
-            raise ResearchError(f"mcp initialize error: {resp['error']}")
-        # notification (no response expected)
-        try:
-            self._post({"jsonrpc": "2.0", "method": "notifications/initialized", "params": {}})
-        except Exception:
-            pass
-        self._initialized = True
+        for version in [self.protocol_version] + [v for v in self.SUPPORTED_VERSIONS if v != self.protocol_version]:
+            payload = {"jsonrpc": "2.0", "id": self._next_id(), "method": "initialize",
+                       "params": {"protocolVersion": version,
+                                  "capabilities": {},
+                                  "clientInfo": {"name": "brp-strategic-intelligence", "version": "0.1.0"},
+                                  "_meta": {"protocolVersion": version}}}
+            try:
+                resp = self._post(payload)
+            except ResearchError:
+                continue
+            if "error" in resp:
+                err = resp["error"]
+                msg = str(err.get("message", "") if isinstance(err, dict) else err).lower()
+                if "version" in msg or "unsupported" in msg:
+                    continue
+                raise ResearchError(f"mcp initialize error: {err}")
+            self.negotiated_version = (resp.get("result") or {}).get("protocolVersion", version)
+            self.protocol_version = self.negotiated_version or version
+            try:
+                self._post({"jsonrpc": "2.0", "method": "notifications/initialized", "params": {}})
+            except Exception:
+                pass
+            self._initialized = True
+            return
+        raise ResearchError("no supported protocol version accepted by server")
 
     def discover_tools(self, cfg: McpServerConfig) -> List[dict]:
         self._initialize()
@@ -141,7 +172,7 @@ class McpJsonRpcTransport(Transport):
         try:
             self._initialize()
             payload = {"jsonrpc": "2.0", "id": self._next_id(), "method": "tools/call",
-                       "params": {"name": tool_name, "arguments": arguments}}
+                       "params": {"name": tool_name, "arguments": arguments, "_meta": {"protocolVersion": self.protocol_version}}}
             resp = self._post(payload)
             if "error" in resp:
                 return McpToolResult(server_id=cfg.server_id, tool_name=tool_name, success=False,
@@ -149,7 +180,6 @@ class McpJsonRpcTransport(Transport):
             result = resp.get("result") or {}
             is_error = bool(result.get("isError"))
             content = result.get("content", [])
-            # flatten text content
             text_parts = []
             for c in content:
                 if isinstance(c, dict) and c.get("type") == "text":

@@ -47,6 +47,17 @@ class ProviderStatus(BaseModel):
     details: Optional[str] = None
 
 
+class ProviderStatusDetailed(BaseModel):
+    name: str
+    configured: bool
+    connected: bool = False
+    authenticated: bool = False
+    available: bool = False
+    mock_mode: bool = False
+    last_success: Optional[str] = None
+    last_error: Optional[str] = None
+
+
 class CapabilitiesResponse(BaseModel):
     service: str
     version: str

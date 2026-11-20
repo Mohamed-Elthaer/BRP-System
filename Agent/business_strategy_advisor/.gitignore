@@ -14,3 +14,5 @@ data_test/
 dist/
 build/
 *.egg-info/
+
+*.egg-info/
