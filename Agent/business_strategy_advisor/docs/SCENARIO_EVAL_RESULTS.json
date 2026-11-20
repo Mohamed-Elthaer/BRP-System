@@ -1,0 +1,191 @@
+[
+  {
+    "scenario_id": "S1",
+    "description": "Increase profitability by 20% in 90 days",
+    "objective": "increase_profitability",
+    "actions": 5,
+    "kpis": 4,
+    "scenarios": [
+      "baseline",
+      "conservative",
+      "expected",
+      "optimistic"
+    ],
+    "problems": [
+      "Ingredient waste is 4.2% of usage, above a 3% target.",
+      "6 ingredients are below minimum stock."
+    ],
+    "selected_strategy": "opt_balanced",
+    "evidence_source": "mock_business_intelligence",
+    "limitations": [
+      "customer demographic breakdown",
+      "delivery channel split"
+    ],
+    "assumptions": [
+      "Internal evidence from Business Intelligence provider.",
+      "External research used only when configured and available."
+    ]
+  },
+  {
+    "scenario_id": "S2",
+    "description": "Reduce food waste",
+    "objective": "reduce_waste",
+    "actions": 4,
+    "kpis": 4,
+    "scenarios": [
+      "baseline",
+      "conservative",
+      "expected",
+      "optimistic"
+    ],
+    "problems": [
+      "Ingredient waste is 4.2% of usage, above a 3% target.",
+      "6 ingredients are below minimum stock."
+    ],
+    "selected_strategy": "opt_balanced",
+    "evidence_source": "mock_business_intelligence",
+    "limitations": [
+      "customer demographic breakdown",
+      "delivery channel split"
+    ],
+    "assumptions": [
+      "Internal evidence from Business Intelligence provider.",
+      "External research used only when configured and available."
+    ]
+  },
+  {
+    "scenario_id": "S3",
+    "description": "Optimize menu prices vs competitors",
+    "objective": "improve_pricing",
+    "actions": 5,
+    "kpis": 4,
+    "scenarios": [
+      "baseline",
+      "conservative",
+      "expected",
+      "optimistic"
+    ],
+    "problems": [
+      "Ingredient waste is 4.2% of usage, above a 3% target.",
+      "6 ingredients are below minimum stock."
+    ],
+    "selected_strategy": "opt_balanced",
+    "evidence_source": "mock_business_intelligence",
+    "limitations": [
+      "customer demographic breakdown",
+      "delivery channel split"
+    ],
+    "assumptions": [
+      "Internal evidence from Business Intelligence provider.",
+      "External research used only when configured and available."
+    ]
+  },
+  {
+    "scenario_id": "S4",
+    "description": "Improve low-demand hours",
+    "objective": "evaluate_marketing",
+    "actions": 3,
+    "kpis": 4,
+    "scenarios": [
+      "baseline",
+      "conservative",
+      "expected",
+      "optimistic"
+    ],
+    "problems": [
+      "Ingredient waste is 4.2% of usage, above a 3% target.",
+      "6 ingredients are below minimum stock."
+    ],
+    "selected_strategy": "opt_balanced",
+    "evidence_source": "mock_business_intelligence",
+    "limitations": [
+      "customer demographic breakdown",
+      "delivery channel split"
+    ],
+    "assumptions": [
+      "Internal evidence from Business Intelligence provider.",
+      "External research used only when configured and available."
+    ]
+  },
+  {
+    "scenario_id": "S5",
+    "description": "Evaluate new menu category",
+    "objective": "explore_new_products",
+    "actions": 4,
+    "kpis": 4,
+    "scenarios": [
+      "baseline",
+      "conservative",
+      "expected",
+      "optimistic"
+    ],
+    "problems": [
+      "Ingredient waste is 4.2% of usage, above a 3% target.",
+      "6 ingredients are below minimum stock."
+    ],
+    "selected_strategy": "opt_balanced",
+    "evidence_source": "mock_business_intelligence",
+    "limitations": [
+      "customer demographic breakdown",
+      "delivery channel split"
+    ],
+    "assumptions": [
+      "Internal evidence from Business Intelligence provider.",
+      "External research used only when configured and available."
+    ]
+  },
+  {
+    "scenario_id": "S6",
+    "description": "Compare conservative vs aggressive growth",
+    "objective": "increase_revenue",
+    "actions": 5,
+    "kpis": 4,
+    "scenarios": [
+      "baseline",
+      "conservative",
+      "expected",
+      "optimistic"
+    ],
+    "problems": [
+      "Ingredient waste is 4.2% of usage, above a 3% target.",
+      "6 ingredients are below minimum stock."
+    ],
+    "selected_strategy": "opt_balanced",
+    "evidence_source": "mock_business_intelligence",
+    "limitations": [
+      "customer demographic breakdown",
+      "delivery channel split"
+    ],
+    "assumptions": [
+      "Internal evidence from Business Intelligence provider.",
+      "External research used only when configured and available."
+    ]
+  },
+  {
+    "scenario_id": "S7",
+    "description": "Assess expansion to another location",
+    "objective": "evaluate_expansion",
+    "actions": 5,
+    "kpis": 4,
+    "scenarios": [
+      "baseline",
+      "conservative",
+      "expected",
+      "optimistic"
+    ],
+    "problems": [
+      "Ingredient waste is 4.2% of usage, above a 3% target.",
+      "6 ingredients are below minimum stock."
+    ],
+    "selected_strategy": "opt_balanced",
+    "evidence_source": "mock_business_intelligence",
+    "limitations": [
+      "customer demographic breakdown",
+      "delivery channel split"
+    ],
+    "assumptions": [
+      "Internal evidence from Business Intelligence provider.",
+      "External research used only when configured and available."
+    ]
+  }
+]
